@@ -7,7 +7,7 @@ import Image from "next/image";
 import { allProducts, categories, type Product } from "@/data/products";
 import ProductModal from "./ProductModal";
 
-const filters = ["Tümü", ...categories.map((c) => c.title)];
+const filters = categories.map((c) => c.title);
 
 // Kategori title -> id eşleştirmesi
 const categoryTitleToId = Object.fromEntries(categories.map((c) => [c.title, c.id]));
@@ -15,15 +15,13 @@ const categoryTitleToId = Object.fromEntries(categories.map((c) => [c.title, c.i
 type ViewMode = "grid" | "large" | "single";
 
 export default function ProductShowcase() {
-  const [activeFilter, setActiveFilter] = useState("Tümü");
+  const [activeFilter, setActiveFilter] = useState(filters[0]);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const filteredProducts: Product[] =
-    activeFilter === "Tümü"
-      ? allProducts
-      : allProducts.filter((p) => p.category === categoryTitleToId[activeFilter]);
+    allProducts.filter((p) => p.category === categoryTitleToId[activeFilter]);
 
   const gridClass =
     viewMode === "grid"
