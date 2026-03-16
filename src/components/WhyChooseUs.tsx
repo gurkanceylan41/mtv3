@@ -4,45 +4,42 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { TrendingUp, Truck, Layers, Globe } from "lucide-react";
 
-// =============================================
-// Neden Biz Bölümü - Kartvizit Tarzı
-// Altın çizgili özellik kartları + sayaç bölümü
-// Keskin geometrik görünüm, ince altın detaylar
-// Animasyonlu sayaçlar ile güven istatistikleri
-// =============================================
-
 const features = [
   {
     icon: TrendingUp,
-    title: "Toptan Fiyat Avantajı",
-    description:
-      "Doğrudan üretici ve ithalatçılardan tedarik ederek en uygun toptan fiyatları sunuyoruz.",
+    title: "Toptan Fiyat Avantaji",
+    description: "Dogrudan uretici ve ithalatcilardan tedarik ederek en uygun toptan fiyatlari sunuyoruz.",
+    stat: "40%",
+    statLabel: "Maliyet Tasarrufu",
   },
   {
     icon: Truck,
-    title: "Hızlı Teslimat",
-    description:
-      "Türkiye genelinde hızlı kargo ve lojistik ağımız ile siparişlerinizi en kısa sürede teslim ediyoruz.",
+    title: "Hizli Teslimat",
+    description: "Turkiye genelinde hizli kargo ve lojistik agimiz ile siparislerinizi teslim ediyoruz.",
+    stat: "24s",
+    statLabel: "Ortalama Teslimat",
   },
   {
     icon: Layers,
-    title: "Geniş Ürün Yelpazesi",
-    description:
-      "6 farklı kategoride 1000'den fazla ürün çeşidi ile tüm ihtiyaçlarınızı karşılıyoruz.",
+    title: "Genis Urun Yelpazesi",
+    description: "8 farkli kategoride 1000'den fazla urun cesidi ile tum ihtiyaclarinizi karsiliyoruz.",
+    stat: "1000+",
+    statLabel: "Urun Cesidi",
   },
   {
     icon: Globe,
-    title: "Güvenilir İthalat",
-    description:
-      "Uluslararası tedarikçi ağımız ile kaliteli ürünleri güvenilir ithalat süreçleriyle getiriyoruz.",
+    title: "Guvenilir Ithalat",
+    description: "Uluslararasi tedarikci agimiz ile kaliteli urunleri guvenilir ithalat surecleriyle getiriyoruz.",
+    stat: "50+",
+    statLabel: "Ulke Agi",
   },
 ];
 
 const stats = [
-  { value: 1000, suffix: "+", label: "Ürün" },
-  { value: 500, suffix: "+", label: "Müşteri" },
-  { value: 50, suffix: "+", label: "Tedarikçi" },
-  { value: 6, suffix: "", label: "Kategori" },
+  { value: 1000, suffix: "+", label: "Urun" },
+  { value: 500, suffix: "+", label: "Musteri" },
+  { value: 50, suffix: "+", label: "Tedarikci" },
+  { value: 8, suffix: "", label: "Kategori" },
 ];
 
 function AnimatedCounter({ value, suffix, label }: { value: number; suffix: string; label: string }) {
@@ -66,10 +63,10 @@ function AnimatedCounter({ value, suffix, label }: { value: number; suffix: stri
 
   return (
     <div ref={ref} className="text-center">
-      <div className="text-4xl md:text-5xl font-bold text-[#C9A84C] font-[Cormorant,serif]">
-        {count}<span className="text-[#D4AF37]">{suffix}</span>
+      <div className="text-4xl md:text-5xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+        {count}<span className="text-[#2C5364]">{suffix}</span>
       </div>
-      <div className="text-[10px] text-[#555555] mt-2 tracking-[0.2em] uppercase font-[Montserrat,sans-serif]">
+      <div className="text-[11px] text-[#555] tracking-[0.15em] uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>
         {label}
       </div>
     </div>
@@ -78,30 +75,44 @@ function AnimatedCounter({ value, suffix, label }: { value: number; suffix: stri
 
 export default function WhyChooseUs() {
   return (
-    <section id="neden-biz" className="relative py-24 md:py-32 px-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Bölüm başlığı */}
+    <section id="hakkimizda" className="relative py-28 md:py-40 px-6">
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.07]"
+        style={{ backgroundImage: "url('/why-bg.jpg')" }}
+      />
+      {/* Top divider */}
+      <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+
+      <div className="max-w-[1400px] mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-12 h-px bg-[#C9A84C]/40" />
-            <span className="text-[11px] font-semibold tracking-[0.3em] uppercase text-[#C9A84C] font-[Montserrat,sans-serif]">
-              Avantajlarımız
+          <div className="inline-flex items-center gap-3 bg-white/[0.04] border border-white/[0.06] rounded-full px-4 py-1.5 mb-6">
+            <div className="w-1 h-1 rounded-full bg-[#2C5364]" />
+            <span className="text-[10px] font-medium tracking-[0.15em] uppercase text-[#888]" style={{ fontFamily: "'Inter', sans-serif" }}>
+              Neden Biz
             </span>
-            <div className="w-12 h-px bg-[#C9A84C]/40" />
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Neden <span className="text-[#C9A84C]">Merkez Tedarik?</span>
+          <h2
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            Neden Merkez<br />
+            <span className="text-[#2C5364]">Tedarik?</span>
           </h2>
+          <p className="text-[#666] text-base max-w-xl mx-auto leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
+            Kalite, guven ve uygun fiyati tek catida topluyoruz.
+          </p>
         </motion.div>
 
-        {/* Özellik kartları - 2x2 grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-20">
+        {/* Features - 2x2 grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -111,25 +122,30 @@ export default function WhyChooseUs() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group cursor-pointer"
+                className="group"
               >
-                <div className="relative bg-[#0A0A0A] border border-[#C9A84C]/10 p-8 hover:border-[#C9A84C]/30 transition-all duration-300">
-                  {/* Köşe dekorasyonları */}
-                  <div className="absolute top-0 right-0 w-6 h-px bg-[#C9A84C]/40" />
-                  <div className="absolute top-0 right-0 w-px h-6 bg-[#C9A84C]/40" />
-                  <div className="absolute bottom-0 left-0 w-6 h-px bg-[#C9A84C]/40" />
-                  <div className="absolute bottom-0 left-0 w-px h-6 bg-[#C9A84C]/40" />
-
-                  <div className="flex gap-6">
-                    {/* İkon */}
-                    <div className="w-12 h-12 border border-[#C9A84C]/20 flex items-center justify-center shrink-0 group-hover:border-[#C9A84C]/40 transition-colors duration-300">
-                      <Icon size={22} className="text-[#C9A84C]" strokeWidth={1.2} />
+                <div className="relative bg-white/[0.02] border border-white/[0.05] rounded-2xl p-8 md:p-10 hover:bg-white/[0.04] hover:border-white/[0.1] transition-all duration-500 h-full">
+                  <div className="flex flex-col md:flex-row md:items-start gap-6">
+                    {/* Icon */}
+                    <div className="w-14 h-14 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center shrink-0 group-hover:border-[#2C5364]/20 group-hover:bg-[#2C5364]/[0.06] transition-all duration-500">
+                      <Icon size={24} className="text-[#888] group-hover:text-[#2C5364] transition-colors duration-500" strokeWidth={1.5} />
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-2 font-[Cormorant,serif] tracking-wide">
-                        {feature.title}
-                      </h3>
-                      <p className="text-[#888888] text-sm leading-[1.8] font-[Montserrat,sans-serif]">
+
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-3">
+                        <h3 className="text-xl font-semibold text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
+                          {feature.title}
+                        </h3>
+                        <div className="text-right hidden sm:block">
+                          <div className="text-2xl font-bold text-[#2C5364]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                            {feature.stat}
+                          </div>
+                          <div className="text-[9px] text-[#555] tracking-[0.1em] uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>
+                            {feature.statLabel}
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-[#666] text-[14px] leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
                         {feature.description}
                       </p>
                     </div>
@@ -140,30 +156,20 @@ export default function WhyChooseUs() {
           })}
         </div>
 
-        {/* Sayaç bölümü - Altın kenarlıklı kart */}
+        {/* Counter section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8 }}
         >
-          <div className="relative bg-[#0A0A0A] border border-[#C9A84C]/15 p-10 md:p-16">
-            {/* Dört köşe altın dekorasyonları */}
-            <div className="absolute top-0 left-0 w-10 h-px bg-[#C9A84C]/50" />
-            <div className="absolute top-0 left-0 w-px h-10 bg-[#C9A84C]/50" />
-            <div className="absolute top-0 right-0 w-10 h-px bg-[#C9A84C]/50" />
-            <div className="absolute top-0 right-0 w-px h-10 bg-[#C9A84C]/50" />
-            <div className="absolute bottom-0 left-0 w-10 h-px bg-[#C9A84C]/50" />
-            <div className="absolute bottom-0 left-0 w-px h-10 bg-[#C9A84C]/50" />
-            <div className="absolute bottom-0 right-0 w-10 h-px bg-[#C9A84C]/50" />
-            <div className="absolute bottom-0 right-0 w-px h-10 bg-[#C9A84C]/50" />
-
+          <div className="relative bg-white/[0.02] border border-white/[0.05] rounded-3xl p-12 md:p-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
               {stats.map((stat, i) => (
-                <div key={stat.label} className="flex items-center justify-center">
+                <div key={stat.label} className="relative">
                   <AnimatedCounter {...stat} />
                   {i < 3 && (
-                    <div className="hidden md:block absolute right-0 w-px h-12 bg-[#C9A84C]/10" />
+                    <div className="hidden md:block absolute top-1/2 -translate-y-1/2 -right-6 w-px h-12 bg-white/[0.06]" />
                   )}
                 </div>
               ))}

@@ -2,12 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-// =============================================
-// Geometrik Altın Çizgi Arka Plan Bileşeni
-// Kartvizit tarzı: Saf siyah zemin üzerine ince altın
-// geometrik çokgen wireframe deseni
-// WebGL shader ile render edilen düşük frekanslı animasyon
-// =============================================
+// Sutera-inspired organic particle/mesh background
+// Dark atmospheric with subtle organic movement
 
 const vertexShaderSource = `
   attribute vec2 a_position;
@@ -16,79 +12,79 @@ const vertexShaderSource = `
   }
 `;
 
-// Fragment shader - Geometrik altın wireframe deseni
-// Saf siyah arka plan üzerine ince altın çizgiler
 const fragmentShaderSource = `
   precision mediump float;
   uniform float u_time;
   uniform vec2 u_resolution;
 
-  // Rastgele sayı üretici
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
   }
 
-  // Voronoi kenar hesaplama - Geometrik çokgen çizgileri oluşturur
-  float voronoiEdge(vec2 uv, float scale) {
-    vec2 id = floor(uv * scale);
-    vec2 fd = fract(uv * scale);
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+  }
 
-    float minDist = 1.0;
-    float secondMin = 1.0;
-
-    for(int y = -1; y <= 1; y++) {
-      for(int x = -1; x <= 1; x++) {
-        vec2 neighbor = vec2(float(x), float(y));
-        vec2 point = vec2(
-          hash(id + neighbor),
-          hash(id + neighbor + 100.0)
-        );
-        // Çok yavaş hareket - zarif his
-        point = 0.5 + 0.4 * sin(u_time * 0.08 + 6.2831 * point);
-        float dist = length(neighbor + point - fd);
-        if(dist < minDist) {
-          secondMin = minDist;
-          minDist = dist;
-        } else if(dist < secondMin) {
-          secondMin = dist;
-        }
-      }
+  float fbm(vec2 p) {
+    float val = 0.0;
+    float amp = 0.5;
+    for(int i = 0; i < 5; i++) {
+      val += amp * noise(p);
+      p *= 2.0;
+      amp *= 0.5;
     }
-    // Kenar çizgisi kalınlığı
-    return secondMin - minDist;
+    return val;
   }
 
   void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
     float aspect = u_resolution.x / u_resolution.y;
-    vec2 uvAspect = vec2(uv.x * aspect, uv.y);
+    vec2 p = vec2(uv.x * aspect, uv.y);
 
-    // Saf siyah arka plan
-    vec3 color = vec3(0.0);
+    // Deep organic dark base
+    vec3 color = vec3(0.035, 0.035, 0.035);
 
-    // Geometrik çizgi katmanları - farklı ölçeklerde
-    float edge1 = voronoiEdge(uvAspect, 3.0);
-    float edge2 = voronoiEdge(uvAspect + 10.0, 5.0);
+    // Organic flowing noise layers
+    float t = u_time * 0.03;
+    float n1 = fbm(p * 2.0 + vec2(t, t * 0.7));
+    float n2 = fbm(p * 3.5 + vec2(-t * 0.5, t * 0.3) + n1 * 0.5);
+    float n3 = fbm(p * 1.5 + vec2(t * 0.2, -t * 0.4));
 
-    // İnce çizgiler oluştur - smoothstep ile keskin kenarlar
-    float line1 = 1.0 - smoothstep(0.0, 0.06, edge1);
-    float line2 = 1.0 - smoothstep(0.0, 0.04, edge2);
+    // Warm earth tone highlights
+    vec3 warmTone = vec3(0.06, 0.20, 0.25);
+    vec3 coolTone = vec3(0.04, 0.08, 0.10);
 
-    // Altın rengi - sıcak ton (kartvizitteki altın)
-    vec3 gold = vec3(0.788, 0.659, 0.298);
+    // Organic blend
+    color += warmTone * n1 * 0.08;
+    color += coolTone * n2 * 0.12;
 
-    // Birinci katman - ana geometrik çizgiler (parlak)
-    color += gold * line1 * 0.15;
-    // İkinci katman - ince detay çizgileri (soluk)
-    color += gold * line2 * 0.06;
+    // Subtle mesh/grid lines like Sutera floating UI
+    float grid1 = abs(sin(p.x * 20.0 + n1 * 2.0)) * abs(sin(p.y * 20.0 + n2 * 2.0));
+    grid1 = smoothstep(0.95, 1.0, grid1);
+    color += vec3(0.06, 0.20, 0.25) * grid1 * 0.04;
 
-    // Merkez hafif altın parıltı - spot ışık efekti
-    float spotlight = exp(-length(uv - vec2(0.5, 0.35)) * 2.0);
-    color += gold * spotlight * 0.02;
+    // Central atmospheric glow
+    float centerGlow = exp(-length(uv - vec2(0.5, 0.4)) * 1.8);
+    color += vec3(0.04, 0.12, 0.15) * centerGlow * 0.15;
 
-    // Vignette - köşeleri tamamen karart
-    float vignette = 1.0 - length(uv - 0.5) * 1.0;
-    vignette = smoothstep(0.0, 0.8, vignette);
+    // Top-right subtle warm accent
+    float topGlow = exp(-length(uv - vec2(0.8, 0.2)) * 3.0);
+    color += vec3(0.04, 0.15, 0.20) * topGlow * 0.08;
+
+    // Film grain
+    float grain = hash(uv * u_time * 100.0) * 0.02;
+    color += grain;
+
+    // Vignette
+    float vignette = 1.0 - length(uv - 0.5) * 0.9;
+    vignette = smoothstep(0.0, 0.7, vignette);
     color *= vignette;
 
     gl_FragColor = vec4(color, 1.0);
@@ -110,9 +106,8 @@ export default function ShaderBackground() {
       powerPreference: "low-power",
     });
 
-    // WebGL yoksa saf siyah arka plan göster
     if (!gl) {
-      canvas.style.background = "#000000";
+      canvas.style.background = "#0F2027";
       return;
     }
 
